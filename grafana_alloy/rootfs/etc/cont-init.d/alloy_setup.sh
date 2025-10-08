@@ -17,6 +17,13 @@ else
         bashio::config.require 'fleet_management_password' "You need to supply Fleet Management password"
         bashio::config.require 'gcloud_rw_api_key' "You need to supply GCLOUD_RW_API_KEY"
         
+        # Determine Fleet Management ID - use custom ID if provided, otherwise fallback to constants.hostname
+        if bashio::config.has_value 'fleet_management_id'; then
+            FLEET_ID="\"$(bashio::config "fleet_management_id")\""
+        else
+            FLEET_ID="constants.hostname"
+        fi
+        
         export FLEET_MANAGEMENT_CONFIG="
         remotecfg {
             url = \"$(bashio::config "fleet_management_url")\"
@@ -24,7 +31,7 @@ else
                 username = \"$(bashio::config "fleet_management_username")\"
                 password = \"$(bashio::config "fleet_management_password")\"
             }
-            id             = constants.hostname
+            id             = $FLEET_ID
             poll_frequency = \"$(bashio::config "fleet_poll_frequency")\"
         }"
         
