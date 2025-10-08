@@ -43,7 +43,6 @@ else
                 password = \"$(bashio::config "fleet_management_password")\"
             }
             id = $FLEET_ID
-            attributes  = $FLEET_ATTRIBUTES_LINE
             poll_frequency = \"$(bashio::config "fleet_poll_frequency")\"
         }"
         
