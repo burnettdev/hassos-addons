@@ -25,12 +25,12 @@ else
         fi
         
         # Parse Fleet Management attributes from JSON string
-        FLEET_ATTRIBUTES=""
+        FLEET_ATTRIBUTES_LINE=""
         if bashio::config.has_value 'fleet_management_attributes'; then
             ATTRIBUTES_JSON="$(bashio::config "fleet_management_attributes")"
             if [ "$ATTRIBUTES_JSON" != "{}" ] && [ -n "$ATTRIBUTES_JSON" ]; then
                 # Convert JSON to Alloy format: {"key": "value"} stays as {"key": "value"}
-                FLEET_ATTRIBUTES="
+                FLEET_ATTRIBUTES_LINE="
             attributes = $ATTRIBUTES_JSON"
             fi
         fi
@@ -43,7 +43,7 @@ else
                 password = \"$(bashio::config "fleet_management_password")\"
             }
             id = $FLEET_ID
-            attributes = $FLEET_ATTRIBUTES
+            attributes  = $FLEET_ATTRIBUTES_LINE
             poll_frequency = \"$(bashio::config "fleet_poll_frequency")\"
         }"
         
