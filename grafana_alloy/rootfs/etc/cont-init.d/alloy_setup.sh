@@ -10,6 +10,32 @@ if bashio::config.true 'override_config'; then
         bashio::config.require 'override_config_path' "Config override is Enabled, must set override_config_path"
     fi
 else
+    # Add Fleet Management Configuration
+    if bashio::config.true 'enable_fleet_management'; then
+        bashio::config.require 'fleet_management_url' "You need to supply Fleet Management URL"
+        bashio::config.require 'fleet_management_username' "You need to supply Fleet Management username"
+        bashio::config.require 'fleet_management_password' "You need to supply Fleet Management password"
+        bashio::config.require 'gcloud_rw_api_key' "You need to supply GCLOUD_RW_API_KEY"
+        
+        export FLEET_MANAGEMENT_CONFIG="
+        remotecfg {
+            url = \"$(bashio::config "fleet_management_url")\"
+            basic_auth {
+                username = \"$(bashio::config "fleet_management_username")\"
+                password = \"$(bashio::config "fleet_management_password")\"
+            }
+            id             = constants.hostname
+            poll_frequency = \"$(bashio::config "fleet_poll_frequency")\"
+        }"
+        
+        # Export the GCLOUD_RW_API_KEY environment variable for the Alloy process
+        export GCLOUD_RW_API_KEY="$(bashio::config "gcloud_rw_api_key")"
+        
+        # Write environment variables to file for the service to source
+        echo "export GCLOUD_RW_API_KEY=\"$(bashio::config "gcloud_rw_api_key")\"" > /tmp/alloy_env
+    else
+        export FLEET_MANAGEMENT_CONFIG=""
+    fi
     # Add Prometheus Write Endpoint
     if bashio::config.true 'enable_prometheus'; then
 

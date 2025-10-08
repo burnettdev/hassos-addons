@@ -33,6 +33,12 @@ options:
   enable_loki_syslog: false
   override_config: false
   override_config_path: "/config/alloy/example.alloy"
+  enable_fleet_management: false
+  fleet_management_url: ""
+  fleet_management_username: ""
+  fleet_management_password: ""
+  gcloud_rw_api_key: ""
+  fleet_poll_frequency: "5m"
 schema:
   enable_prometheus: bool
   prometheus_write_endpoint: str?
@@ -46,3 +52,9 @@ schema:
   enable_loki_syslog: bool
   override_config: bool
   override_config_path: str?
+  enable_fleet_management: bool
+  fleet_management_url: str?
+  fleet_management_username: str?
+  fleet_management_password: password?
+  gcloud_rw_api_key: password?
+  fleet_poll_frequency: list(1m|5m|10m|30m|1h)
