@@ -24,6 +24,17 @@ else
             FLEET_ID="constants.hostname"
         fi
         
+        # Parse Fleet Management attributes from JSON string
+        FLEET_ATTRIBUTES=""
+        if bashio::config.has_value 'fleet_management_attributes'; then
+            ATTRIBUTES_JSON="$(bashio::config "fleet_management_attributes")"
+            if [ "$ATTRIBUTES_JSON" != "{}" ] && [ -n "$ATTRIBUTES_JSON" ]; then
+                # Convert JSON to Alloy format: {"key": "value"} stays as {"key": "value"}
+                FLEET_ATTRIBUTES="
+            attributes = $ATTRIBUTES_JSON"
+            fi
+        fi
+        
         export FLEET_MANAGEMENT_CONFIG="
         remotecfg {
             url = \"$(bashio::config "fleet_management_url")\"
@@ -31,7 +42,8 @@ else
                 username = \"$(bashio::config "fleet_management_username")\"
                 password = \"$(bashio::config "fleet_management_password")\"
             }
-            id             = $FLEET_ID
+            id = $FLEET_ID
+            attributes = $FLEET_ATTRIBUTES
             poll_frequency = \"$(bashio::config "fleet_poll_frequency")\"
         }"
         
@@ -40,6 +52,13 @@ else
         
         # Write environment variables to file for the service to source
         echo "export GCLOUD_RW_API_KEY=\"$(bashio::config "gcloud_rw_api_key")\"" > /tmp/alloy_env
+        
+        # Set hostname if specified
+        if bashio::config.has_value 'fleet_management_hostname'; then
+            CUSTOM_HOSTNAME="$(bashio::config "fleet_management_hostname")"
+            echo "export FLEET_HOSTNAME=\"$CUSTOM_HOSTNAME\"" >> /tmp/alloy_env
+            bashio::log.info "Setting container hostname to: $CUSTOM_HOSTNAME"
+        fi
     else
         export FLEET_MANAGEMENT_CONFIG=""
     fi

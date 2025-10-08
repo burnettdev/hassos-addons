@@ -38,6 +38,8 @@ options:
   fleet_management_username: ""
   fleet_management_password: ""
   fleet_management_id: ""
+  fleet_management_attributes: "{}"
+  fleet_management_hostname: ""
   gcloud_rw_api_key: ""
   fleet_poll_frequency: "5m"
 schema:
@@ -58,5 +60,7 @@ schema:
   fleet_management_username: str?
   fleet_management_password: password?
   fleet_management_id: str?
+  fleet_management_attributes: str?
+  fleet_management_hostname: str?
   gcloud_rw_api_key: password?
   fleet_poll_frequency: list(1m|5m|10m|30m|1h)

@@ -19,5 +19,11 @@ if [ -f /tmp/alloy_env ]; then
     source /tmp/alloy_env
 fi
 
+# Set hostname if specified
+if [ -n "$FLEET_HOSTNAME" ]; then
+    bashio::log.info "Setting hostname to: $FLEET_HOSTNAME"
+    hostname "$FLEET_HOSTNAME" || bashio::log.warning "Failed to set hostname to $FLEET_HOSTNAME"
+fi
+
 # Run Alloy
 exec /usr/local/bin/alloy run --server.http.listen-addr=0.0.0.0:12345 --disable-reporting --storage.path=/data $CONFIG_FILE
