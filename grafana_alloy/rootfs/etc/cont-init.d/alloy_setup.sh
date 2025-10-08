@@ -57,6 +57,8 @@ else
             CUSTOM_HOSTNAME="$(bashio::config "fleet_management_hostname")"
             echo "export FLEET_HOSTNAME=\"$CUSTOM_HOSTNAME\"" >> /tmp/alloy_env
             bashio::log.info "Setting container hostname to: $CUSTOM_HOSTNAME"
+            # Write hostname to /etc/hostname (this will be used by constants.hostname)
+            echo "$CUSTOM_HOSTNAME" > /etc/hostname
         fi
     else
         export FLEET_MANAGEMENT_CONFIG=""

@@ -1,7 +1,7 @@
 ---
 name: "Grafana Alloy"
 description: "Grafana Alloy"
-version: "0.0.11"
+version: "0.0.12"
 slug: "grafana_alloy"
 arch:
   - aarch64
@@ -17,7 +17,6 @@ ports_description:
 journald: true
 host_network: true
 host_pid: true
-privileged: true
 map:
   - type: homeassistant_config
     path: /config
